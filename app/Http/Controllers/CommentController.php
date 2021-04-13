@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Http\Requests\CommentRequest;
 
 class CommentController extends Controller
 {
@@ -14,7 +15,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $data = Comment::oldest()->get()->all();
+        $data = Comment::orderBy('created_at','desc')->get();
         return $data;
     }
 
@@ -36,7 +37,7 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        Comment::create($request->all());
+        return Comment::create($request->all());
     }
 
     /**
