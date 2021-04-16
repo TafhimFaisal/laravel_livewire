@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/book',App\Http\Livewire\Book\Book::class);
+Route::get('/book/add',App\Http\Livewire\Book\Store::class);

@@ -2,20 +2,26 @@
     x-data="{ open: false }"
     @store.window="open = false"
     @delete.window="open = false"
-    class="container p-5"
+    class=""
 >
-
+    {{session('message')}}
     <form wire:submit.prevent="store">
         <div class="form-group row" wire:submit.prevent="storeComments">
 
             <div class="col-sm-12 mt-2">
+                @if($image) <img class="mb-2" id="image_preview" src="{{$image}}" width="100" height="100"> @endif
+                <input id="image_upload" type="file" wire:change="$emit('filechosen')" class="form-control" id="" placeholder="title">
+                @error('serverMemo.data.image') <span class="error text-danger">{{ $message }}</span> @enderror
+            </div>
+
+            <div class="col-sm-12 mt-2">
                 <input type="text" wire:model="title" class="form-control" id="" placeholder="title">
-                @error('title') <span class="error text-danger">{{ $message }}</span> @enderror
+                @error('serverMemo.data.title') <span class="error text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="col-sm-12 mt-2">
                 <div class="form-group">
                     <textarea wire:model="comment" class="form-control" placeholder="comment" id="" rows="3"></textarea>
-                    @error('comment') <span class="error text-danger">{{ $message }}</span> @enderror
+                    @error('serverMemo.data.comment') <span class="error text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
             <div class="form-group col-sm-3 mt-2">
@@ -27,7 +33,7 @@
 
     <div class="row">
         @foreach ($comments as $singlecomment)
-            <div class="col-md-12">
+            <div class="col-md-12" id="commnet-card-{{$singlecomment->id}}">
                 <div class="card mt-2">
                     <div class="card-body">
                         <h5 class="card-title">{{$singlecomment->title}}</h5>
@@ -39,17 +45,27 @@
                 </div>
             </div>
         @endforeach
-
+        {{ $comments->links() }}
     </div>
 </div>
 
 <script>
     window.addEventListener('store', event => {
-        alert('Name updated to: '+ event.detail.massage);
+        // alert('Name updated to: '+ event.detail.massage);
     })
 
     window.addEventListener('delete', event => {
-        alert('Name delete to: '+ event.detail.massage);
+        $(`#commnet-card-${event.detail.id}`).remove()
+        // alert('Name delete to: '+ event.detail.massage);
+    })
+
+    Livewire.on('filechosen', () => {
+        let file = $('#image_upload')[0].files[0]
+        let reader = new FileReader()
+        reader.onload = () => {
+            Livewire.emit('uploaded_image',reader.result)
+        }
+        reader.readAsDataURL(file)
     })
 
 </script>

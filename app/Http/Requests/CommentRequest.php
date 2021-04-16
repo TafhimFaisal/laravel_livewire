@@ -24,8 +24,21 @@ class CommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|min:6|max:100',
-            'comment' => 'required|min:6|max:300',
+            'serverMemo.data.title' => 'required|min:6|max:100',
+            'serverMemo.data.comment' => 'required|min:6|max:300',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'serverMemo.data.title.required' => 'A title is required',
+            'serverMemo.data.title.min' => 'minimum charecter 6',
+            'serverMemo.data.title.max' => 'maximum charecter 100',
+
+            'serverMemo.data.comment.required' => 'A comment is required',
+            'serverMemo.data.comment.min' => 'minimum charecter 6',
+            'serverMemo.data.comment.max' => 'maximum charecter 100',
         ];
     }
 }

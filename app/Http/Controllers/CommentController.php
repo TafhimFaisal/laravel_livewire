@@ -15,7 +15,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $data = Comment::orderBy('created_at','desc')->get();
+        $data = Comment::latest('created_at','desc')->paginate(2);
         return $data;
     }
 
@@ -35,9 +35,11 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
-        return Comment::create($request->all());
+        $data = $request->all()['serverMemo']['data'];
+        $data['user_id'] = 1;
+        return Comment::create($data);
     }
 
     /**
